@@ -332,7 +332,7 @@ class PyTestRailPlugin(object):
                     entry['comment'] += u'Log truncated\n...\n' if len(str(comment)) > COMMENT_SIZE_LIMIT else u''
                     entry['comment'] += u"    " + converter(str(comment), "utf-8")[-COMMENT_SIZE_LIMIT:].replace('\n', '\n    ')
                     entry['comment'] += u"\n\n                            Test name: "
-                    entry['comment'] += re.search(r'test_.*\(\)', (u"    " + converter(str(comment), "utf-8"))).group(0)
+                    entry['comment'] += re.search(r'test_.*\(', (u"    " + converter(str(comment), "utf-8"))).group(0)
             elif comment == '':
                 entry['comment'] = self.custom_comment
             duration = result.get('duration')
@@ -353,8 +353,8 @@ class PyTestRailPlugin(object):
             for result in response:
                 comment = result.get('comment', '')
                 if comment:
-                    test_name = re.search(r'test_.*\(\)', comment)
-                    screenshot = test_name.group(0).split('()')[0]
+                    test_name = re.search(r'test_.*\(', comment)
+                    screenshot = test_name.group(0).split('(')[0]
                     screenshot_path = f'{os.getcwd()}/artifacts/{screenshot}.png'
                     file = screenshot_path if isinstance(screenshot_path, Path) else Path(screenshot_path)
                     with file.open("rb") as attachment:
